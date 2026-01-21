@@ -80,43 +80,33 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
         <div id="machineList" class="combo-list"></div>
       </div>
     </div>
-
-   <div><label class="req">ITEM NAME</label><input name="itemName" required></div>
-    <div><label class="req">Plan</label><input type="number" id="plan" name="plan" required></div>
-    <div><label class="req">Mfg</label><input type="number" id="mfg" name="mfg" required></div>
-    <div><label class="req">UM</label>
-      <select name="um" required>
+    <div><label class="req">M/C NO</label><input name="mcNo" required></div>
+    <div><label class="req">Customer Name</label><input name="customerName" required></div>
+    <div><label class="req">Cable Type / Size</label><input name="cableType" required></div>
+    <div><label class="req">BOBBIN NO / COIL NO /  DRUM NO</label><input name="drumNo" required></div>
+    <div><label class="req">Process</label>
+      <select name="process" required>
         <option value="">Select</option>
-        <option>KG</option><option>KM</option><option>MT</option><option>NA</option>
-      </select>
-    </div>
-    <div><label class="req">KM / BALANCE</label><input id="kmBalance" name="kmBalance" readonly></div>
-    <div><label class="req">MC NO</label><input name="mcNo" required></div>
-    <div><label class="req">TARGET / DAY</label><input type="number" name="targetDay" required></div>
-    <div><label class="req">RM Availability</label><select name="rmAvail"><option>Yes</option><option>No</option></select></div>
-    <div><label class="req">MP Required</label><input type="number" name="mpReq" required></div>
-    <div><label class="req">No of Shifts</label><input type="number" name="shifts" required></div>
-    <div><label class="req">TIME  FOR TESTING AND ARRANGEMENT QC </label><input name="qcTime" required></div>
-    <div><label class="req">No of working days plan</label><input type="number" name="workingDays" required></div>
-    <div class="full-width">
-      <label class="req">HOD</label>
-      <select name="hod" required>
+        <option>AFTER AGEING</option><option>BEFORE AGEING</option>
+    <div><label class="req">OD/DIA</label><input type="number" id="odDia" name="odDia" required></div>
+    <div><label class="req">CR@20 DEG C</label><input type="number" id="cr20" name="cr20" required></div>
+    <div><label class="req">BREAKING LOAD</label><input type="number" id="breakingLoad" name="breakingLoad" required></div>
+    <div><label class="req">ELONGATION %</label><input type="number" id="elongation" name="elongation" required></div>
+    <div><label class="req">UTS</label><input type="number" id="uts" name="uts" required></div>
+    <div><label class="req">CONDUCTIVITY</label><input type="number" id="conductivity" name="conductivity" required></div>
+    <div><label class="req">WEIGHT</label><input type="number" id="weight" name="weight" required></div>
+    <div><label class="req">RESITIVITY</label><input type="number" id="resistivity" name="resistivity" required></div>
+    <div><label class="req">TORSION</label><input type="number" id="torsion" name="torsion" required></div>
+    <div><label class="req">Results</label>
+      <select name="results" required>
         <option value="">Select</option>
-        <option>ARNAB MITRA</option>
-        <option>ATINDRIYA CHAKRABORTY</option>
-        <option>Sukanta Manna</option>
-        <option>HABIB SHAK</option>
-        <option>KOUSICK KHATUA</option>
-        <option>Krishna Kant Yogendra Yadav</option>
-        <option>Palash Panja</option>
-        <option>Prasenjit Patra</option>
-        <option>VINOD KUMAR</option>
-        <option>KHARAGPUR</option>
-        <option>NA</option>
-      </select>
-    </div>
-
-    <button class="submit-btn" id="submitBtn">Submit Data</button>
+        <option>FAIL</option><option>PASS</option><option>OK</option>
+    <div><label class="req">REMARKS</label>
+      <select name="remarks" required>
+        <option value="">Select</option>
+        <option>BL FAIL</option><option>UTS FAIL</option><option>PASS</option><option>OK</option>
+ 
+   <button class="submit-btn" id="submitBtn">Submit Data</button>
   </form>
 
   <div style="text-align:center">
