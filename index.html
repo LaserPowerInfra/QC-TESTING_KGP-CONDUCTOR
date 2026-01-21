@@ -54,7 +54,12 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
 
   <form class="form-grid" id="entryForm">
     <input type="hidden" id="userEmail" name="userEmail">
-    <input type="hidden" id="userName" name="userName">
+    <input type="hidden" id="testedBy" name="testedBy">
+
+    <div>
+      <label class="req">Date</label>
+      <input type="date" name="entryDate" required>
+    </div>
 
     <div><label class="req">Shift</label>
       <select name="shift" required>
@@ -132,7 +137,6 @@ const firebaseConfig={
   appId:"1:919012116249:web:3699a77a34c8c8facd6788"
 };
 
-// আপনার দেওয়া নতুন স্ক্রিপ্ট URL
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwJPfqKIsYl_uFwuGxXQsz-bHlFTKLM1jY_c7CYGA64zmmJqIQk4ZDVM8BYajfwzAJudQ/exec";
 
 const app=initializeApp(firebaseConfig);
@@ -152,12 +156,9 @@ onAuthStateChanged(auth,user=>{
     formSection.style.display="block";
     userInfoDisplay.textContent="👤 "+user.displayName;
     document.getElementById("userEmail").value=user.email;
-    document.getElementById("userName").value=user.displayName;
+    document.getElementById("testedBy").value=user.displayName;
   }
 });
-
-// অপ্রয়োজনীয় ড্রপডাউন লোডার (JSONP) এবং ক্যালকুলেটর (calc) কোডগুলো বাদ দিয়েছি
-// কারণ আপনার ফর্মে এখন মেশিন ম্যানুয়াল সিলেক্ট হচ্ছে এবং Plan/Mfg ফিল্ড নেই।
 
 const entryForm = document.getElementById("entryForm");
 const submitBtn = document.getElementById("submitBtn");
@@ -170,16 +171,21 @@ entryForm.addEventListener("submit",e=>{
   const fd=new FormData(entryForm);
   const obj={};fd.forEach((v,k)=>obj[k]=v);
 
-  fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify(obj)})
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body:JSON.stringify(obj)
+  })
     .then(r=>r.json())
     .then(res=>{
       if(res.result==="success"){
         Swal.fire("Submitted","Data saved successfully!","success");
         entryForm.reset();
-        document.getElementById("userEmail").value = auth.currentUser.email;
-        document.getElementById("userName").value = auth.currentUser.displayName;
+        if(auth.currentUser){
+            document.getElementById("userEmail").value = auth.currentUser.email;
+            document.getElementById("testedBy").value = auth.currentUser.displayName;
+        }
       }else{
-        throw res.message;
+        throw new Error(res.message);
       }
     })
     .catch(err=>Swal.fire("Error", "Something went wrong: " + err, "error"))
