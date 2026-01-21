@@ -62,13 +62,13 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
     <input type="hidden" id="userName" name="userName">
 
     <div><label class="req">Shift</label>
-      <select name=".shift" required>
+      <select name="shift" required>
         <option value="">Select</option>
         <option>DAY</option><option>NIGHT</option>
       </select>
     </div>
     <div><label class="req">MACHINE NO</label>
-      <select name="um" required>
+      <select name="machineName" required>
         <option value="">Select</option>
         <option>RBD-14</option><option>RBD-17</option><option>RBD-18</option>
       </select>
@@ -76,12 +76,12 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
     <div class="full-width">
       <label class="req">COIL NO / BATCH NO</label>
       <div class="combo" id="comboWrapper">
-        <input id="machineInput" name="machine" placeholder="Loading machines..." autocomplete="off" required>
+        <input id="machineInput" name="machine" placeholder="Loading coil no..." autocomplete="off" required>
         <div id="machineList" class="combo-list"></div>
       </div>
     </div>
 
-    <div><label class="req">ITEM NAME</label><input name="itemName" required></div>
+   <div><label class="req">ITEM NAME</label><input name="itemName" required></div>
     <div><label class="req">Plan</label><input type="number" id="plan" name="plan" required></div>
     <div><label class="req">Mfg</label><input type="number" id="mfg" name="mfg" required></div>
     <div><label class="req">UM</label>
