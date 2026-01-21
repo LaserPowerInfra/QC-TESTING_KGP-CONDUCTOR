@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Production Planning Laser</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,sans-serif}
+#bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:-1}
+header{background:#0d6efd;color:#fff;padding:15px;text-align:center;font-size:22px;font-weight:600;position:sticky;top:0;z-index:1000}
+.card{max-width:850px;margin:30px auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,.25)}
+
+#loginSection{text-align:center;padding:50px 20px}
+.btn-google{background:#fff;color:#444;border:1px solid #ddd;padding:12px 25px;border-radius:50px;font-weight:600;cursor:pointer}
+
+#formSection{display:none}
+.user-info{background:#e7f1ff;color:#0d6efd;padding:10px;border-radius:6px;text-align:center;margin-bottom:20px;font-weight:bold}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.full-width{grid-column:1/-1}
+label{font-size:13px;font-weight:600}
+.req::after{content:" *";color:red}
+input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
+input[readonly]{background:#f1f3f6}
+
+.combo{position:relative}
+.combo-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;max-height:220px;overflow-y:auto;display:none;z-index:100}
+.combo-list div{padding:10px;cursor:pointer}
+.combo-list div:hover{background:#e9ecef}
+
+button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer}
+.logout-btn{margin-top:15px;border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:none;cursor:pointer}
+
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<video id="bgVideo" autoplay muted loop playsinline>
+  <source src="https://laserpowerinfra.com/wp-content/uploads/2025/09/lpi-video.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
+<header>Production Planning Laser</header>
+
+<div class="card">
+
+<div id="loginSection">
+  <h3>Welcome User</h3>
+  <button onclick="googleLogin()" class="btn-google">Sign in with Google</button>
+</div>
+
+<div id="formSection">
+  <div class="user-info" id="userInfoDisplay"></div>
+
+  <form class="form-grid" id="entryForm">
+    <input type="hidden" id="userEmail" name="userEmail">
+    <input type="hidden" id="userName" name="userName">
+
+    <div class="full-width">
+      <label class="req">MACHINE NAME</label>
+      <div class="combo" id="comboWrapper">
+        <input id="machineInput" name="machine" placeholder="Loading list..." autocomplete="off" required>
+        <div id="machineList" class="combo-list"></div>
+      </div>
+    </div>
+
+    <div><label class="req">Cost Code</label><input id="costCode" name="costCode" readonly></div>
+    <div><label class="req">ITEM NAME</label><input name="itemName" required></div>
+    <div><label class="req">Plan</label><input type="number" id="plan" name="plan" required></div>
+    <div><label class="req">Mfg</label><input type="number" id="mfg" name="mfg" required></div>
+    <div><label class="req">UM</label><select name="um" required><option value="">Select</option><option>KG</option><option>KM</option><option>MT</option><option>NA</option></select></div>
+    <div><label class="req">KM / BALANCE</label><input id="kmBalance" name="kmBalance" readonly></div>
+    <div><label class="req">MC NO</label><input name="mcNo" required></div>
+    <div><label class="req">TARGET / DAY</label><input type="number" name="targetDay" required></div>
+    <div><label class="req">RM Availability</label><select name="rmAvail"><option>Yes</option><option>No</option></select></div>
+    <div><label class="req">MP Required</label><input type="number" name="mpReq" required></div>
+    <div><label class="req">No of Shifts</label><input type="number" name="shifts" required></div>
+    <div><label class="req">QC Time</label><input name="qcTime" required></div>
+    <div><label class="req">Working Days</label><input type="number" name="workingDays" required></div>
+    <div class="full-width"><label class="req">HOD</label><select name="hod" required><option value="">Select</option><option>ARNAB MITRA</option><option>ATINDRIYA CHAKRABORTY</option><option>Sukanta Manna</option><option>NA</option></select></div>
+
+    <button class="submit-btn" id="submitBtn">Submit Data</button>
+  </form>
+
+  <div style="text-align:center">
+    <button class="logout-btn" onclick="logout()">Log Out</button>
+  </div>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyDywbG-rcyBHFB6OhuJesqasadBYDRlrJk",
+  authDomain:"laser-html-apps.firebaseapp.com",
+  projectId:"laser-html-apps",
+  appId:"1:919012116249:web:3699a77a34c8c8facd6788"
+};
+
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwZ35hDWjy7EPGBU2zm-iflj0LVDEAufsKT_o--ALBi6xvPTVn07TF52-Gi8wOCU7JLcg/exec";
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const provider=new GoogleAuthProvider();
+
+window.machines=[];
+
+window.googleLogin=()=>signInWithPopup(auth,provider);
+window.logout=()=>signOut(auth).then(()=>location.reload());
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    loginSection.style.display="none";
+    formSection.style.display="block";
+    userInfoDisplay.textContent="👤 "+user.displayName;
+    userEmail.value=user.email;
+    userName.value=user.displayName;
+    loadMachineData();
+  }else{
+    loginSection.style.display="block";
+    formSection.style.display="none";
+  }
+});
+
+/* JSONP LOAD */
+function loadMachineData(){
+  const cb="jsonp_"+Date.now();
+  window[cb]=function(data){
+    window.machines=data;
+    machineInput.placeholder="Select or type...";
+    delete window[cb];
+  };
+  const s=document.createElement("script");
+  s.src=SCRIPT_URL+"?action=getMachines&callback="+cb;
+  s.onerror=()=>machineInput.placeholder="Error loading list!";
+  document.body.appendChild(s);
+}
+
+const machineInput=document.getElementById("machineInput");
+const machineList=document.getElementById("machineList");
+const costCodeInput=document.getElementById("costCode");
+const comboWrapper=document.getElementById("comboWrapper");
+
+function showList(txt=""){
+  machineList.innerHTML="";
+  const f=machines.filter(m=>m.machine.toLowerCase().includes(txt.toLowerCase()));
+  f.forEach(m=>{
+    const d=document.createElement("div");
+    d.textContent=m.machine;
+    d.onclick=()=>{
+      machineInput.value=m.machine;
+      costCodeInput.value=m.costCode;
+      machineList.style.display="none";
+    };
+    machineList.appendChild(d);
+  });
+  machineList.style.display=f.length?"block":"none";
+}
+
+machineInput.addEventListener("input",()=>showList(machineInput.value));
+machineInput.addEventListener("click",()=>showList(machineInput.value));
+document.addEventListener("click",e=>{
+  if(!comboWrapper.contains(e.target)) machineList.style.display="none";
+});
+
+const plan=document.getElementById("plan");
+const mfg=document.getElementById("mfg");
+const bal=document.getElementById("kmBalance");
+function calc(){bal.value=(+plan.value||0)-(+mfg.value||0)}
+plan.addEventListener("input",calc);
+mfg.addEventListener("input",calc);
+
+entryForm.addEventListener("submit",e=>{
+  e.preventDefault();
+  submitBtn.disabled=true;
+  const fd=new FormData(entryForm);
+  const obj={};fd.forEach((v,k)=>obj[k]=v);
+
+  fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify(obj)})
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.result==="success"){
+        Swal.fire("Submitted","Data saved","success");
+        entryForm.reset();
+        bal.value="";
+      }else throw res.message;
+    })
+    .catch(err=>Swal.fire("Error",err,"error"))
+    .finally(()=>submitBtn.disabled=false);
+});
+</script>
+
+</body>
+</html>
