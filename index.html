@@ -22,17 +22,12 @@ header{background:#0d6efd;color:#fff;padding:15px;text-align:center;font-size:22
 
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .full-width{grid-column:1/-1}
-label{font-size:13px;font-weight:600}
+label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
 .req::after{content:" *";color:red}
 input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
 input[readonly]{background:#f1f3f6}
 
-.combo{position:relative}
-.combo-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;max-height:220px;overflow-y:auto;display:none;z-index:100}
-.combo-list div{padding:10px;cursor:pointer}
-.combo-list div:hover{background:#e9ecef}
-
-button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer}
+button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer; margin-top:15px;}
 .logout-btn{margin-top:15px;border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:none;cursor:pointer}
 
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
@@ -67,44 +62,54 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
         <option>DAY</option><option>NIGHT</option>
       </select>
     </div>
+
     <div><label class="req">MACHINE NO</label>
-      <select name="machineName" required>
+      <select name="machineNo" required>
         <option value="">Select</option>
         <option>RBD-14</option><option>RBD-17</option><option>RBD-18</option>
       </select>
     </div>
+
     <div class="full-width">
       <label class="req">COIL NO / BATCH NO</label>
-      <div class="combo" id="comboWrapper">
-        <input id="machineInput" name="machine" placeholder="Loading coil no..." autocomplete="off" required>
-        <div id="machineList" class="combo-list"></div>
-      </div>
+      <input name="coilBatchNo" placeholder="Enter Coil/Batch No" required>
     </div>
+
     <div><label class="req">M/C NO</label><input name="mcNo" required></div>
     <div><label class="req">Customer Name</label><input name="customerName" required></div>
     <div><label class="req">Cable Type / Size</label><input name="cableType" required></div>
-    <div><label class="req">BOBBIN NO / COIL NO /  DRUM NO</label><input name="drumNo" required></div>
+    <div><label class="req">BOBBIN NO / COIL NO / DRUM NO</label><input name="drumNo" required></div>
+    
     <div><label class="req">Process</label>
       <select name="process" required>
         <option value="">Select</option>
         <option>AFTER AGEING</option><option>BEFORE AGEING</option>
-    <div><label class="req">OD/DIA</label><input type="number" id="odDia" name="odDia" required></div>
-    <div><label class="req">CR@20 DEG C</label><input type="number" id="cr20" name="cr20" required></div>
-    <div><label class="req">BREAKING LOAD</label><input type="number" id="breakingLoad" name="breakingLoad" required></div>
-    <div><label class="req">ELONGATION %</label><input type="number" id="elongation" name="elongation" required></div>
-    <div><label class="req">UTS</label><input type="number" id="uts" name="uts" required></div>
-    <div><label class="req">CONDUCTIVITY</label><input type="number" id="conductivity" name="conductivity" required></div>
-    <div><label class="req">WEIGHT</label><input type="number" id="weight" name="weight" required></div>
-    <div><label class="req">RESITIVITY</label><input type="number" id="resistivity" name="resistivity" required></div>
-    <div><label class="req">TORSION</label><input type="number" id="torsion" name="torsion" required></div>
+      </select>
+    </div>
+
+    <div><label class="req">OD/DIA</label><input type="number" step="any" name="odDia" required></div>
+    <div><label class="req">CR@20 DEG C</label><input type="number" step="any" name="cr20" required></div>
+    <div><label class="req">BREAKING LOAD</label><input type="number" step="any" name="breakingLoad" required></div>
+    <div><label class="req">ELONGATION %</label><input type="number" step="any" name="elongation" required></div>
+    <div><label class="req">UTS</label><input type="number" step="any" name="uts" required></div>
+    <div><label class="req">CONDUCTIVITY</label><input type="number" step="any" name="conductivity" required></div>
+    <div><label class="req">WEIGHT</label><input type="number" step="any" name="weight" required></div>
+    <div><label class="req">RESITIVITY</label><input type="number" step="any" name="resistivity" required></div>
+    <div><label class="req">TORSION</label><input type="number" step="any" name="torsion" required></div>
+    
     <div><label class="req">Results</label>
       <select name="results" required>
         <option value="">Select</option>
         <option>FAIL</option><option>PASS</option><option>OK</option>
+      </select>
+    </div>
+
     <div><label class="req">REMARKS</label>
       <select name="remarks" required>
         <option value="">Select</option>
         <option>BL FAIL</option><option>UTS FAIL</option><option>PASS</option><option>OK</option>
+      </select>
+    </div>
  
    <button class="submit-btn" id="submitBtn">Submit Data</button>
   </form>
@@ -127,6 +132,7 @@ const firebaseConfig={
   appId:"1:919012116249:web:3699a77a34c8c8facd6788"
 };
 
+// আপনার দেওয়া নতুন স্ক্রিপ্ট URL
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwJPfqKIsYl_uFwuGxXQsz-bHlFTKLM1jY_c7CYGA64zmmJqIQk4ZDVM8BYajfwzAJudQ/exec";
 
 const app=initializeApp(firebaseConfig);
@@ -136,12 +142,6 @@ const provider=new GoogleAuthProvider();
 const loginSection=document.getElementById("loginSection");
 const formSection=document.getElementById("formSection");
 const userInfoDisplay=document.getElementById("userInfoDisplay");
-const machineInput=document.getElementById("machineInput");
-const machineList=document.getElementById("machineList");
-const costCodeInput=document.getElementById("costCode");
-const comboWrapper=document.getElementById("comboWrapper");
-
-let machines=[];
 
 window.googleLogin=()=>signInWithPopup(auth,provider);
 window.logout=()=>signOut(auth).then(()=>location.reload());
@@ -151,57 +151,22 @@ onAuthStateChanged(auth,user=>{
     loginSection.style.display="none";
     formSection.style.display="block";
     userInfoDisplay.textContent="👤 "+user.displayName;
-    userEmail.value=user.email;
-    userName.value=user.displayName;
-    loadMachinesJSONP();
+    document.getElementById("userEmail").value=user.email;
+    document.getElementById("userName").value=user.displayName;
   }
 });
 
-function loadMachinesJSONP(){
-  const cb="cb_"+Date.now();
-  window[cb]=(data)=>{
-    machines=Array.isArray(data)?data:[];
-    machineInput.placeholder="Select or type machine...";
-    delete window[cb];
-  };
-  const s=document.createElement("script");
-  s.src=SCRIPT_URL+"?action=getMachines&callback="+cb;
-  s.onerror=()=>machineInput.placeholder="Error loading list!";
-  document.body.appendChild(s);
-}
+// অপ্রয়োজনীয় ড্রপডাউন লোডার (JSONP) এবং ক্যালকুলেটর (calc) কোডগুলো বাদ দিয়েছি
+// কারণ আপনার ফর্মে এখন মেশিন ম্যানুয়াল সিলেক্ট হচ্ছে এবং Plan/Mfg ফিল্ড নেই।
 
-function showList(val=""){
-  machineList.innerHTML="";
-  const f=machines.filter(m=>m.machine.toLowerCase().includes(val.toLowerCase()));
-  f.forEach(m=>{
-    const d=document.createElement("div");
-    d.textContent=m.machine;
-    d.onclick=()=>{
-      machineInput.value=m.machine;
-      costCodeInput.value=m.costCode||"";
-      machineList.style.display="none";
-    };
-    machineList.appendChild(d);
-  });
-  machineList.style.display=f.length?"block":"none";
-}
-
-machineInput.addEventListener("input",()=>showList(machineInput.value));
-machineInput.addEventListener("focus",()=>showList(machineInput.value));
-document.addEventListener("click",e=>{
-  if(!comboWrapper.contains(e.target)) machineList.style.display="none";
-});
-
-const plan=document.getElementById("plan");
-const mfg=document.getElementById("mfg");
-const bal=document.getElementById("kmBalance");
-function calc(){bal.value=(+plan.value||0)-(+mfg.value||0)}
-plan.addEventListener("input",calc);
-mfg.addEventListener("input",calc);
+const entryForm = document.getElementById("entryForm");
+const submitBtn = document.getElementById("submitBtn");
 
 entryForm.addEventListener("submit",e=>{
   e.preventDefault();
   submitBtn.disabled=true;
+  submitBtn.innerText = "Submitting...";
+  
   const fd=new FormData(entryForm);
   const obj={};fd.forEach((v,k)=>obj[k]=v);
 
@@ -209,13 +174,19 @@ entryForm.addEventListener("submit",e=>{
     .then(r=>r.json())
     .then(res=>{
       if(res.result==="success"){
-        Swal.fire("Submitted","Data saved","success");
+        Swal.fire("Submitted","Data saved successfully!","success");
         entryForm.reset();
-        bal.value="";
-      }else throw res.message;
+        document.getElementById("userEmail").value = auth.currentUser.email;
+        document.getElementById("userName").value = auth.currentUser.displayName;
+      }else{
+        throw res.message;
+      }
     })
-    .catch(err=>Swal.fire("Error",err,"error"))
-    .finally(()=>submitBtn.disabled=false);
+    .catch(err=>Swal.fire("Error", "Something went wrong: " + err, "error"))
+    .finally(()=>{
+        submitBtn.disabled=false;
+        submitBtn.innerText = "Submit Data";
+    });
 });
 </script>
 
