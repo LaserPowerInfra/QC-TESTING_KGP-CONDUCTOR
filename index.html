@@ -25,7 +25,8 @@ header{background:#0d6efd;color:#fff;padding:15px;text-align:center;font-size:22
 label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
 .req::after{content:" *";color:red}
 input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
-input[readonly]{background:#f1f3f6}
+/* Readonly inputs look different */
+input[readonly]{background:#e9ecef; cursor: not-allowed; color: #555; font-weight: bold;}
 
 /* Dropdown Arrow Style */
 .combo { position: relative; }
@@ -115,12 +116,18 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
       </select>
     </div>
 
-    <div><label class="req">OD/DIA</label><input type="number" step="any" name="odDia" required></div>
+    <div><label class="req">OD/DIA</label><input type="number" step="any" id="odDia" name="odDia" required></div>
+    
     <div><label class="req">CR@20 DEG C</label><input type="number" step="any" name="cr20" required></div>
-    <div><label class="req">BREAKING LOAD</label><input type="number" step="any" name="breakingLoad" required></div>
+    
+    <div><label class="req">BREAKING LOAD</label><input type="number" step="any" id="breakingLoad" name="breakingLoad" required></div>
+    
     <div><label class="req">ELONGATION %</label><input type="number" step="any" name="elongation" required></div>
     
-    <div><label class="req">UTS</label><input type="number" step="any" name="uts" required></div>
+    <div><label class="req">UTS (Auto Calc)</label>
+      <input type="number" step="any" id="uts" name="uts" readonly required>
+    </div>
+    
     <div><label class="req">CONDUCTIVITY</label><input type="number" step="any" name="conductivity" required></div>
     <div><label class="req">WEIGHT</label><input type="number" step="any" name="weight" required></div>
     <div><label class="req">RESITIVITY</label><input type="number" step="any" name="resistivity" required></div>
@@ -178,7 +185,7 @@ const coilList = document.getElementById("coilList");
 const comboWrapper = document.getElementById("comboWrapper");
 let coilData = [];
 
-// Default Date to Today
+// --- Default Date to Today ---
 document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("entryDate");
   const today = new Date();
@@ -187,6 +194,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const dd = String(today.getDate()).padStart(2, '0');
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 });
+
+// --- Calculation Logic for UTS ---
+const odInput = document.getElementById("odDia");
+const blInput = document.getElementById("breakingLoad");
+const utsInput = document.getElementById("uts");
+
+function calculateUTS() {
+    const od = parseFloat(odInput.value);
+    const bl = parseFloat(blInput.value);
+
+    if (od && bl) {
+        // Formula: BREAKING LOAD / ((OD * OD * 3.142 / 4) / 9.8) * 1000
+        const area = (od * od * 3.142) / 4;
+        const denominator = area / 9.8;
+        
+        if (denominator !== 0) {
+            const result = (bl / denominator) * 1000;
+            utsInput.value = result.toFixed(2); // Result showing up to 2 decimal places
+        } else {
+            utsInput.value = "";
+        }
+    } else {
+        utsInput.value = "";
+    }
+}
+
+// Trigger calculation when user types
+odInput.addEventListener("input", calculateUTS);
+blInput.addEventListener("input", calculateUTS);
+
 
 window.googleLogin=()=>signInWithPopup(auth,provider);
 window.logout=()=>signOut(auth).then(()=>location.reload());
