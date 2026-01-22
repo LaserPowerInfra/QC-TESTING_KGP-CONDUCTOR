@@ -7,49 +7,99 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
+/* Reset & Basic Style */
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,sans-serif}
+html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,sans-serif; overflow: hidden;} /* Prevent Body Scroll */
 #bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:-1}
-header{background:#0d6efd;color:#fff;padding:15px;text-align:center;font-size:22px;font-weight:600;position:sticky;top:0;z-index:1000}
-.card{max-width:850px;margin:30px auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,.25)}
+
+/* Compact Header */
+header{background:#0d6efd;color:#fff;padding:8px;text-align:center;font-size:18px;font-weight:600;position:sticky;top:0;z-index:1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+
+/* Compact Card container to fit screen */
+.card{
+    width:98%; 
+    max-width:1200px; 
+    margin: 10px auto; 
+    background:#fff; 
+    padding:15px; 
+    border-radius:8px; 
+    box-shadow:0 5px 15px rgba(0,0,0,.25);
+    height: calc(100vh - 60px); /* Fit within remaining height */
+    overflow-y: auto; /* Internal scroll if screen is too small */
+    display: flex;
+    flex-direction: column;
+}
 
 #loginSection{text-align:center;padding:50px 20px}
-.btn-google{background:#fff;color:#444;border:1px solid #ddd;padding:12px 25px;border-radius:50px;font-weight:600;cursor:pointer}
+.btn-google{background:#fff;color:#444;border:1px solid #ddd;padding:10px 20px;border-radius:50px;font-weight:600;cursor:pointer}
 
-#formSection{display:none}
-.user-info{background:#e7f1ff;color:#0d6efd;padding:10px;border-radius:6px;text-align:center;margin-bottom:20px;font-weight:bold}
+#formSection{display:none; flex: 1;}
+.user-info{background:#e7f1ff;color:#0d6efd;padding:5px;border-radius:4px;text-align:center;margin-bottom:10px;font-weight:bold; font-size: 13px;}
 
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.full-width{grid-column:1/-1}
-label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
+/* 4 Column Grid for Compact View */
+.form-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 8px; /* Reduced gap */
+    align-items: end;
+}
+
+/* Label & Input Styling */
+label{font-size:11px;font-weight:600; margin-bottom: 2px; display: block; color: #444;}
 .req::after{content:" *";color:red}
-input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
+input,select{
+    width:100%;
+    padding:6px; /* Reduced padding */
+    border:1px solid #ccc;
+    border-radius:4px;
+    font-size: 12px;
+}
+input:focus, select:focus { border-color: #0d6efd; outline: none; }
 
-/* Readonly inputs style (Auto Calculated Fields) */
-input[readonly]{background:#e9ecef; cursor: not-allowed; color: #333; font-weight: bold; border-color: #999;}
+/* Readonly fields */
+input[readonly]{background:#f0f2f5; cursor: not-allowed; color: #333; font-weight: bold; border-color: #ccc;}
 
 /* Dropdown Arrow Style */
 .combo { position: relative; }
 .combo::after {
-    content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-    border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #666;
+    content: ''; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #666;
     pointer-events: none;
 }
-.combo input { padding-right: 35px; cursor: pointer; }
+.combo input { padding-right: 25px; cursor: pointer; }
 
 .combo-list {
     position:absolute; top:100%; left:0; right:0; background:#fff;
-    border:1px solid #ccc; max-height:200px; overflow-y:auto; display:none;
-    z-index:100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 6px 6px;
+    border:1px solid #ccc; max-height:150px; overflow-y:auto; display:none;
+    z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border-radius: 0 0 4px 4px;
 }
-.combo-list div{padding:10px;cursor:pointer;border-bottom: 1px solid #eee;}
+.combo-list div{padding:8px;cursor:pointer;border-bottom: 1px solid #eee; font-size: 12px;}
 .combo-list div:hover{background:#e9ecef}
 
-button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer; margin-top:15px;}
-.logout-btn{margin-top:15px;border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:none;cursor:pointer}
+/* Submit & Logout Buttons */
+button.submit-btn{
+    grid-column:1/-1;
+    padding:10px;
+    background:#0d6efd;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer; 
+    margin-top:10px;
+}
+button.submit-btn:hover { background: #0b5ed7; }
 
-@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.logout-container { text-align: center; margin-top: 5px; }
+.logout-btn{border:1px solid #dc3545;color:#dc3545;padding:4px 10px;border-radius:3px;background:none;cursor:pointer; font-size: 11px;}
+.logout-btn:hover { background: #dc3545; color: white; }
+
+/* Responsive Adjustments */
+@media(max-width:900px){ .form-grid{ grid-template-columns: repeat(3, 1fr); } }
+@media(max-width:600px){ .form-grid{ grid-template-columns: repeat(2, 1fr); } .card{height: auto; overflow: visible;} body{overflow: auto;} }
+@media(max-width:400px){ .form-grid{ grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -75,95 +125,35 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
     <input type="hidden" id="userEmail" name="userEmail">
     <input type="hidden" id="testedBy" name="testedBy">
 
-    <div>
-      <label class="req">Date</label>
-      <input type="date" id="entryDate" name="entryDate" required>
-    </div>
-
-    <div><label class="req">Shift</label>
-      <select name="shift" required>
-        <option value="">Select</option>
-        <option>DAY</option><option>NIGHT</option>
-      </select>
-    </div>
-
-    <div><label class="req">MACHINE NO</label>
-      <select name="machineNo" required>
-        <option value="">Select</option>
-        <option>RBD-14</option><option>RBD-17</option><option>RBD-18</option>
-      </select>
-    </div>
-
-    <div class="full-width">
-      <label class="req">COIL NO / BATCH NO</label>
-      <div class="combo" id="comboWrapper">
-        <input id="coilInput" name="coilBatchNo" placeholder="Select or type coil..." autocomplete="off" required>
-        <div id="coilList" class="combo-list"></div>
-      </div>
-    </div>
+    <div><label class="req">Date</label><input type="date" id="entryDate" name="entryDate" required></div>
+    <div><label class="req">Shift</label><select name="shift" required><option value="">Select</option><option>DAY</option><option>NIGHT</option></select></div>
+    <div><label class="req">MACHINE NO</label><select name="machineNo" required><option value="">Select</option><option>RBD-14</option><option>RBD-17</option><option>RBD-18</option></select></div>
+    <div class="combo" id="comboWrapper"><label class="req">COIL NO / BATCH NO</label><input id="coilInput" name="coilBatchNo" placeholder="Search..." autocomplete="off" required><div id="coilList" class="combo-list"></div></div>
 
     <div><label class="req">M/C NO</label><input name="mcNo" required></div>
     <div><label class="req">Customer Name</label><input name="customerName" required></div>
     <div><label class="req">Cable Type / Size</label><input name="cableType" required></div>
+    <div><label class="req">BOBBIN / DRUM NO</label><input type="number" name="drumNo" required></div>
     
-    <div><label class="req">BOBBIN NO / COIL NO / DRUM NO</label>
-        <input type="number" name="drumNo" required>
-    </div>
-    
-    <div><label class="req">Process</label>
-      <select name="process" required>
-        <option value="">Select</option>
-        <option>AFTER AGEING</option><option>BEFORE AGEING</option>
-      </select>
-    </div>
-
+    <div><label class="req">Process</label><select name="process" required><option value="">Select</option><option>AFTER AGEING</option><option>BEFORE AGEING</option></select></div>
     <div><label class="req">OD/DIA</label><input type="number" step="any" id="odDia" name="odDia" required></div>
-    
     <div><label class="req">CR@20 DEG C</label><input type="number" step="any" id="cr20" name="cr20" required></div>
-    
     <div><label class="req">BREAKING LOAD</label><input type="number" step="any" id="breakingLoad" name="breakingLoad" required></div>
     
     <div><label class="req">ELONGATION %</label><input type="number" step="any" name="elongation" required></div>
-    
-    <div><label class="req">UTS (Auto Calc)</label>
-      <input type="number" step="any" id="uts" name="uts" readonly required>
-    </div>
-    
-    <div><label class="req">CONDUCTIVITY (Auto Calc)</label>
-      <input type="number" step="any" id="conductivity" name="conductivity" readonly required>
-    </div>
+    <div><label class="req">UTS (Auto)</label><input type="number" step="any" id="uts" name="uts" readonly required></div>
+    <div><label class="req">CONDUCTIVITY (Auto)</label><input type="number" step="any" id="conductivity" name="conductivity" readonly required></div>
+    <div><label class="req">WEIGHT (Auto)</label><input type="number" step="any" id="weight" name="weight" readonly required></div>
 
-    <div><label class="req">WEIGHT (Auto Calc)</label>
-      <input type="number" step="any" id="weight" name="weight" readonly required>
-    </div>
-
-    <div><label class="req">RESISTIVITY (Auto Calc)</label>
-      <input type="number" step="any" id="resistivity" name="resistivity" readonly required>
-    </div>
-
-    <div>
-        <label>TORSION</label>
-        <input type="text" name="torsion">
-    </div>
-    
-    <div><label class="req">Results</label>
-      <select name="results" required>
-        <option value="">Select</option>
-        <option>FAIL</option><option>PASS</option><option>OK</option>
-      </select>
-    </div>
-
-    <div><label class="req">REMARKS</label>
-      <select name="remarks" required>
-        <option value="">Select</option>
-        <option>BL FAIL</option><option>UTS FAIL</option><option>PASS</option><option>OK</option>
-      </select>
-    </div>
+    <div><label class="req">RESISTIVITY (Auto)</label><input type="number" step="any" id="resistivity" name="resistivity" readonly required></div>
+    <div><label>TORSION</label><input type="text" name="torsion"></div>
+    <div><label class="req">Results</label><select name="results" required><option value="">Select</option><option>FAIL</option><option>PASS</option><option>OK</option></select></div>
+    <div><label class="req">REMARKS</label><select name="remarks" required><option value="">Select</option><option>BL FAIL</option><option>UTS FAIL</option><option>PASS</option><option>OK</option></select></div>
  
    <button class="submit-btn" id="submitBtn">Submit Data</button>
   </form>
 
-  <div style="text-align:center">
+  <div class="logout-container">
     <button class="logout-btn" onclick="logout()">Log Out</button>
   </div>
 </div>
@@ -181,7 +171,6 @@ const firebaseConfig={
   appId:"1:919012116249:web:3699a77a34c8c8facd6788"
 };
 
-// ** REPLACE WITH YOUR NEW DEPLOYED URL **
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwJPfqKIsYl_uFwuGxXQsz-bHlFTKLM1jY_c7CYGA64zmmJqIQk4ZDVM8BYajfwzAJudQ/exec";
 
 const app=initializeApp(firebaseConfig);
@@ -198,7 +187,7 @@ const coilList = document.getElementById("coilList");
 const comboWrapper = document.getElementById("comboWrapper");
 let coilData = [];
 
-// --- Default Date to Today ---
+// Default Date
 document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("entryDate");
   const today = new Date();
@@ -208,12 +197,10 @@ document.addEventListener("DOMContentLoaded", () => {
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 });
 
-// --- Calculation Logic (ALL FORMULAS) ---
+// Calculation Logic
 const odInput = document.getElementById("odDia");
 const crInput = document.getElementById("cr20");
 const blInput = document.getElementById("breakingLoad");
-
-// Outputs
 const utsInput = document.getElementById("uts");
 const weightInput = document.getElementById("weight");
 const resInput = document.getElementById("resistivity");
@@ -224,46 +211,34 @@ function calculateAll() {
     const cr = parseFloat(crInput.value) || 0;
     const bl = parseFloat(blInput.value) || 0;
 
-    // 1. Calculate WEIGHT
-    // Formula: 3.14/4 * OD * OD * 2.703
     if (od > 0) {
-        const weight = (3.14 / 4) * od * od * 2.703;
-        weightInput.value = weight.toFixed(2); // 2 Decimals
+        weightInput.value = ((3.14 / 4) * od * od * 2.703).toFixed(2);
     } else {
         weightInput.value = "";
     }
 
-    // 2. Calculate RESISTIVITY
-    // Formula: 3.14/4 * OD * OD * CR
     let resistivityVal = 0;
     if (od > 0 && cr > 0) {
         resistivityVal = (3.14 / 4) * od * od * cr;
-        resInput.value = resistivityVal.toFixed(4); // 4 Decimals
+        resInput.value = resistivityVal.toFixed(4);
     } else {
         resInput.value = "";
     }
 
-    // 3. Calculate CONDUCTIVITY
-    // Formula: 1 / RESISTIVITY * 1724.1
     if (resistivityVal > 0) {
-        const cond = (1 / resistivityVal) * 1724.1;
-        condInput.value = cond.toFixed(2); // 2 Decimals
+        condInput.value = ((1 / resistivityVal) * 1724.1).toFixed(2);
     } else {
         condInput.value = "";
     }
 
-    // 4. Calculate UTS
-    // Formula: BREAKING LOAD / AREA / 9.8 * 1000
     if (od > 0 && bl > 0) {
         const area = (od * od * 3.142) / 4;
-        const uts = (bl / area) / 9.8 * 1000;
-        utsInput.value = uts.toFixed(2); // 2 Decimals
+        utsInput.value = ((bl / area) / 9.8 * 1000).toFixed(2);
     } else {
         utsInput.value = "";
     }
 }
 
-// Trigger calculation when any related input changes
 odInput.addEventListener("input", calculateAll);
 crInput.addEventListener("input", calculateAll);
 blInput.addEventListener("input", calculateAll);
@@ -275,7 +250,7 @@ window.logout=()=>signOut(auth).then(()=>location.reload());
 onAuthStateChanged(auth,user=>{
   if(user){
     loginSection.style.display="none";
-    formSection.style.display="block";
+    formSection.style.display="flex"; // Updated for flex layout
     userInfoDisplay.textContent="👤 "+user.displayName;
     document.getElementById("userEmail").value=user.email;
     document.getElementById("testedBy").value=user.displayName;
@@ -344,7 +319,13 @@ entryForm.addEventListener("submit",e=>{
     .then(r=>r.json())
     .then(res=>{
       if(res.result==="success"){
-        Swal.fire("Submitted","Data saved successfully!","success");
+        Swal.fire({
+            title: "Submitted!",
+            text: "Data saved successfully",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+        });
         entryForm.reset();
         
         const today = new Date();
