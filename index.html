@@ -27,9 +27,44 @@ label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
 input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
 input[readonly]{background:#f1f3f6}
 
-/* Dropdown/Combo Box Styles */
-.combo{position:relative}
-.combo-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;max-height:200px;overflow-y:auto;display:none;z-index:100;box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+/* Dropdown/Combo Box Styles Updated with Arrow */
+.combo {
+    position: relative;
+}
+
+/* Arrow Icon using CSS */
+.combo::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #666; /* Arrow Color */
+    pointer-events: none; /* Allows click to pass through to the input */
+}
+
+/* Add padding to input so text doesn't overlap the arrow */
+.combo input {
+    padding-right: 35px; 
+    cursor: pointer;
+}
+
+.combo-list {
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:#fff;
+    border:1px solid #ccc;
+    max-height:200px;
+    overflow-y:auto;
+    display:none;
+    z-index:100;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 0 0 6px 6px;
+}
 .combo-list div{padding:10px;cursor:pointer;border-bottom: 1px solid #eee;}
 .combo-list div:hover{background:#e9ecef}
 
@@ -84,7 +119,7 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
     <div class="full-width">
       <label class="req">COIL NO / BATCH NO</label>
       <div class="combo" id="comboWrapper">
-        <input id="coilInput" name="coilBatchNo" placeholder="Type to search coil..." autocomplete="off" required>
+        <input id="coilInput" name="coilBatchNo" placeholder="Select or type coil..." autocomplete="off" required>
         <div id="coilList" class="combo-list"></div>
       </div>
     </div>
@@ -194,6 +229,7 @@ function loadCoilList(){
   const cb = "cb_" + Date.now();
   window[cb] = (data) => {
     coilData = Array.isArray(data) ? data : [];
+    // Reset placeholder to indicate ready
     coilInput.placeholder = "Select or type coil...";
     delete window[cb];
   };
@@ -228,6 +264,8 @@ function showList(val = "") {
 
 // Event Listeners for Dropdown
 coilInput.addEventListener("input", () => showList(coilInput.value));
+// Show full list on click/focus if input is empty, otherwise filter
+coilInput.addEventListener("click", () => showList(coilInput.value)); 
 coilInput.addEventListener("focus", () => showList(coilInput.value));
 
 // Close dropdown if clicked outside
