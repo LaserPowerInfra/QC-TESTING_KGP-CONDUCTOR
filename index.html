@@ -58,7 +58,7 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
 
     <div>
       <label class="req">Date</label>
-      <input type="date" name="entryDate" required>
+      <input type="date" id="entryDate" name="entryDate" required>
     </div>
 
     <div><label class="req">Shift</label>
@@ -137,6 +137,7 @@ const firebaseConfig={
   appId:"1:919012116249:web:3699a77a34c8c8facd6788"
 };
 
+// ** REPLACE THIS URL WITH YOUR NEW DEPLOYED WEB APP URL **
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwJPfqKIsYl_uFwuGxXQsz-bHlFTKLM1jY_c7CYGA64zmmJqIQk4ZDVM8BYajfwzAJudQ/exec";
 
 const app=initializeApp(firebaseConfig);
@@ -146,6 +147,17 @@ const provider=new GoogleAuthProvider();
 const loginSection=document.getElementById("loginSection");
 const formSection=document.getElementById("formSection");
 const userInfoDisplay=document.getElementById("userInfoDisplay");
+
+// --- Set Default Date to Today ---
+document.addEventListener("DOMContentLoaded", () => {
+  const dateInput = document.getElementById("entryDate");
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  // Input always needs YYYY-MM-DD to work, Backend will format it to "15 Jan 2026"
+  dateInput.value = `${yyyy}-${mm}-${dd}`;
+});
 
 window.googleLogin=()=>signInWithPopup(auth,provider);
 window.logout=()=>signOut(auth).then(()=>location.reload());
@@ -180,6 +192,14 @@ entryForm.addEventListener("submit",e=>{
       if(res.result==="success"){
         Swal.fire("Submitted","Data saved successfully!","success");
         entryForm.reset();
+        
+        // Reset Date to Today after submit
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        document.getElementById("entryDate").value = `${yyyy}-${mm}-${dd}`;
+
         if(auth.currentUser){
             document.getElementById("userEmail").value = auth.currentUser.email;
             document.getElementById("testedBy").value = auth.currentUser.displayName;
