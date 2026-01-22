@@ -15,7 +15,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,s
 
 header{background:#0d6efd;color:#fff;padding:10px;text-align:center;font-size:20px;font-weight:600;position:sticky;top:0;z-index:1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
 
-/* --- CARD STYLE UPDATED FOR TRANSPARENCY --- */
+/* --- CARD STYLE (Glassmorphism) --- */
 .card{
     max-width: 1100px;
     width: 96%;
@@ -24,13 +24,13 @@ header{background:#0d6efd;color:#fff;padding:10px;text-align:center;font-size:20
     /* Transparent White Background */
     background: rgba(255, 255, 255, 0.85); 
     
-    /* Glass Effect (Blurs the video behind the card) */
+    /* Glass Effect */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     
     padding: 20px; 
     border-radius:10px; 
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Softer shadow for glass look */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); 
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -39,7 +39,7 @@ header{background:#0d6efd;color:#fff;padding:10px;text-align:center;font-size:20
 
 #formSection{display:none}
 .user-info{
-    background: rgba(231, 241, 255, 0.8); /* Semi-transparent user info box */
+    background: rgba(231, 241, 255, 0.9); 
     color:#0d6efd;
     padding:8px;
     border-radius:6px;
@@ -59,10 +59,10 @@ header{background:#0d6efd;color:#fff;padding:10px;text-align:center;font-size:20
 
 label{
     font-size:11px;
-    font-weight:700; /* Bold text for better visibility on glass */
+    font-weight:700; 
     margin-bottom: 2px; 
     display: block; 
-    color: #333; /* Darker text */
+    color: #333; 
 }
 .req::after{content:" *";color:red}
 
@@ -70,15 +70,26 @@ label{
 input, select {
     width:100%;
     padding: 6px 8px;
-    border:1px solid #aaa; /* Slightly darker border for contrast */
+    border:1px solid #aaa; 
     border-radius:4px;
     font-size: 12px;
     height: 32px;
     color: #000;
-    background: rgba(255, 255, 255, 0.9); /* Input fields kept mostly solid for readability */
+    background: rgba(255, 255, 255, 0.95); 
+    transition: all 0.2s;
 }
-input:focus, select:focus { border-color: #0d6efd; outline: none; background: #fff; }
-input[readonly]{background: rgba(233, 236, 239, 0.8); cursor: not-allowed; color: #333; font-weight: bold; border-color: #bbb;}
+input:focus, select:focus { border-color: #0d6efd; outline: none; background: #fff; box-shadow: 0 0 5px rgba(13, 110, 253, 0.3); }
+
+/* --- UPDATED STYLE FOR READONLY (FORMULATED) FIELDS --- */
+input[readonly] {
+    background-color: #fffde7; /* হালকা হলুদ ব্যাকগ্রাউন্ড */
+    color: #000000;            /* কুচকুচে কালো লেখা */
+    font-weight: 800;          /* লেখা মোটা (Bold) */
+    border: 1px solid #fbc02d; /* বর্ডার হাইলাইট */
+    cursor: default;
+    opacity: 1;                /* ট্রান্সপারেন্সি সরানো হয়েছে */
+    font-size: 13px;           /* সাইজ একটু বড় যাতে চোখে পড়ে */
+}
 
 select option { font-size: 12px; padding: 4px; }
 
@@ -95,12 +106,12 @@ select option { font-size: 12px; padding: 4px; }
 .combo-list {
     position:absolute; top:100%; left:0; right:0; background:#fff;
     border:1px solid #ccc; max-height:180px; overflow-y:auto; display:none;
-    z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 4px 4px;
+    z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border-radius: 0 0 4px 4px;
 }
 .combo-list div{
-    padding: 5px 10px;
+    padding: 6px 10px;
     cursor: pointer;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid #f0f0f0;
     font-size: 12px;
     line-height: 1.3;
 }
@@ -124,17 +135,18 @@ button.submit-btn {
     font-weight: 600;
     cursor: pointer;
     width: 100%;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Shadow for pop */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+    transition: background 0.2s;
 }
 
-.btn-exit { background: #6c757d; }
-.btn-exit:hover { background: #5a6268; }
+.btn-exit { background: #546e7a; }
+.btn-exit:hover { background: #455a64; }
 
 .btn-keep { background: #0d6efd; }
 .btn-keep:hover { background: #0b5ed7; }
 
 .logout-container { text-align: center; margin-top: 10px; }
-.logout-btn{border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:rgba(255,255,255,0.8);cursor:pointer; font-size: 12px; font-weight: bold;}
+.logout-btn{border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:rgba(255,255,255,0.9);cursor:pointer; font-size: 12px; font-weight: bold;}
 .logout-btn:hover { background: #dc3545; color: white; }
 
 /* Mobile Responsive */
@@ -246,15 +258,12 @@ const loginSection=document.getElementById("loginSection");
 const formSection=document.getElementById("formSection");
 const userInfoDisplay=document.getElementById("userInfoDisplay");
 
-// Dropdown Elements
 const coilInput = document.getElementById("coilInput");
 const coilList = document.getElementById("coilList");
 const comboWrapper = document.getElementById("comboWrapper");
 let coilData = [];
-// Variable to store last submitted data for duplicate check
 let lastSubmittedJSON = "";
 
-// Default Date
 document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("entryDate");
   const today = new Date();
@@ -264,7 +273,6 @@ document.addEventListener("DOMContentLoaded", () => {
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 });
 
-// Calculation Logic
 const odInput = document.getElementById("odDia");
 const crInput = document.getElementById("cr20");
 const blInput = document.getElementById("breakingLoad");
@@ -282,14 +290,12 @@ function calculateAll() {
     const bl = parseFloat(blInput.value) || 0;
     const elBreak = parseFloat(elBreakInput.value) || 0;
 
-    // Weight
     if (od > 0) {
         weightInput.value = ((3.14 / 4) * od * od * 2.703).toFixed(2);
     } else {
         weightInput.value = "";
     }
 
-    // Resistivity
     let resistivityVal = 0;
     if (od > 0 && cr > 0) {
         resistivityVal = (3.14 / 4) * od * od * cr;
@@ -298,14 +304,12 @@ function calculateAll() {
         resInput.value = "";
     }
 
-    // Conductivity
     if (resistivityVal > 0) {
         condInput.value = ((1 / resistivityVal) * 1724.1).toFixed(2);
     } else {
         condInput.value = "";
     }
 
-    // UTS
     if (od > 0 && bl > 0) {
         const area = (od * od * 3.142) / 4;
         utsInput.value = ((bl / area) / 9.8 * 1000).toFixed(2);
@@ -313,7 +317,6 @@ function calculateAll() {
         utsInput.value = "";
     }
 
-    // Elongation % Calculation
     if (elBreak > 0) {
         const elongationPercent = ((elBreak - 250) / 250) * 100;
         elInput.value = elongationPercent.toFixed(2);
@@ -322,7 +325,6 @@ function calculateAll() {
     }
 }
 
-// Add Event Listeners
 odInput.addEventListener("input", calculateAll);
 crInput.addEventListener("input", calculateAll);
 blInput.addEventListener("input", calculateAll);
@@ -356,12 +358,10 @@ function loadCoilList(){
   document.body.appendChild(s);
 }
 
-// Optimized Search List
 function showList(val = "") {
   coilList.innerHTML = "";
   const fragment = document.createDocumentFragment();
   const valLower = val.toLowerCase();
-  
   let count = 0; 
   for (let i = 0; i < coilData.length; i++) {
      if (count >= 100) break;
@@ -376,7 +376,6 @@ function showList(val = "") {
         count++;
      }
   }
-
   if (count > 0) {
     coilList.appendChild(fragment);
     coilList.style.display = "block";
@@ -388,52 +387,45 @@ function showList(val = "") {
 coilInput.addEventListener("input", () => showList(coilInput.value));
 coilInput.addEventListener("focus", () => showList(coilInput.value));
 coilInput.addEventListener("click", () => showList(coilInput.value));
-
-coilInput.addEventListener("keydown", (e) => {
-    if (e.key === "Tab") {
-        coilList.style.display = "none";
-    }
-});
-
-document.addEventListener("click", e => {
-  if (!comboWrapper.contains(e.target)) {
-    coilList.style.display = "none";
-  }
-});
-
-coilInput.addEventListener("blur", () => {
-    setTimeout(() => {
-        coilList.style.display = "none";
-    }, 200);
-});
+coilInput.addEventListener("keydown", (e) => { if (e.key === "Tab") coilList.style.display = "none"; });
+document.addEventListener("click", e => { if (!comboWrapper.contains(e.target)) coilList.style.display = "none"; });
+coilInput.addEventListener("blur", () => { setTimeout(() => { coilList.style.display = "none"; }, 200); });
 
 const entryForm = document.getElementById("entryForm");
 const btnSubmitExit = document.getElementById("btnSubmitExit");
 const btnSubmitKeep = document.getElementById("btnSubmitKeep");
 
-// Make the function global so onclick in HTML can find it
+// Toast Notification Configuration
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 2000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+});
+
 window.handleFormSubmit = function(clearForm) {
-  
-  // 1. Validation: Check if Form is valid (Required fields)
   if (!entryForm.checkValidity()) {
       entryForm.reportValidity();
       return;
   }
 
-  // 2. Validation: Check if Coil exists in List
   const enteredCoil = coilInput.value.trim();
   const isValidCoil = coilData.includes(enteredCoil);
 
   if (!isValidCoil) {
       Swal.fire({
           icon: 'error',
-          title: 'Invalid Input',
-          text: 'Please select a valid COIL NO / BATCH NO from the dropdown list!'
+          title: 'Invalid Coil',
+          text: 'Please select a valid COIL NO from the list!'
       });
       return;
   }
 
-  // 3. Validation: Check for Duplicate Submission (Without Changes)
   const fd = new FormData(entryForm);
   const obj = {};
   fd.forEach((v,k)=>obj[k]=v);
@@ -442,21 +434,20 @@ window.handleFormSubmit = function(clearForm) {
   if (lastSubmittedJSON === currentJSON) {
       Swal.fire({
           icon: 'warning',
-          title: 'No Changes Detected!',
-          text: 'You are submitting the exact same data again. Please change at least one field before submitting.',
+          title: 'Duplicate Entry',
+          text: 'Change at least one field before submitting again.',
           confirmButtonColor: '#d33'
       });
-      return; // Stop here, don't submit
+      return;
   }
   
-  // Disable buttons
   btnSubmitExit.disabled = true;
   btnSubmitKeep.disabled = true;
   const originalTextExit = btnSubmitExit.innerText;
   const originalTextKeep = btnSubmitKeep.innerText;
   
-  if(clearForm) btnSubmitExit.innerText = "Submitting...";
-  else btnSubmitKeep.innerText = "Submitting...";
+  if(clearForm) btnSubmitExit.innerText = "Saving...";
+  else btnSubmitKeep.innerText = "Saving...";
 
   fetch(SCRIPT_URL,{
     method:"POST",
@@ -465,42 +456,33 @@ window.handleFormSubmit = function(clearForm) {
     .then(r=>r.json())
     .then(res=>{
       if(res.result==="success"){
-        Swal.fire({
-            title: "Submitted!",
-            text: "Data saved successfully",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false
+        // Fast Toast Notification
+        Toast.fire({
+          icon: 'success',
+          title: 'Saved successfully'
         });
         
-        // Update Last Submitted Data
         lastSubmittedJSON = currentJSON;
 
-        // LOGIC: Clear form ONLY if clearForm is true (Submit & Exit)
         if (clearForm) {
             entryForm.reset();
-            lastSubmittedJSON = ""; // Reset history since form is cleared
-            
-            // Restore Date
+            lastSubmittedJSON = ""; 
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const dd = String(today.getDate()).padStart(2, '0');
             document.getElementById("entryDate").value = `${yyyy}-${mm}-${dd}`;
             
-            // Restore User Info
             if(auth.currentUser){
                 document.getElementById("userEmail").value = auth.currentUser.email;
                 document.getElementById("testedBy").value = auth.currentUser.displayName;
             }
         }
-        // If clearForm is false, data stays in input boxes for next entry
-
       }else{
         throw new Error(res.message);
       }
     })
-    .catch(err=>Swal.fire("Error", "Something went wrong: " + err, "error"))
+    .catch(err=>Swal.fire("Error", "Failed: " + err, "error"))
     .finally(()=>{
         btnSubmitExit.disabled = false;
         btnSubmitKeep.disabled = false;
