@@ -27,6 +27,12 @@ label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
 input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
 input[readonly]{background:#f1f3f6}
 
+/* Dropdown/Combo Box Styles */
+.combo{position:relative}
+.combo-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;max-height:200px;overflow-y:auto;display:none;z-index:100;box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+.combo-list div{padding:10px;cursor:pointer;border-bottom: 1px solid #eee;}
+.combo-list div:hover{background:#e9ecef}
+
 button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer; margin-top:15px;}
 .logout-btn{margin-top:15px;border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:none;cursor:pointer}
 
@@ -77,7 +83,10 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
 
     <div class="full-width">
       <label class="req">COIL NO / BATCH NO</label>
-      <input name="coilBatchNo" placeholder="Enter Coil/Batch No" required>
+      <div class="combo" id="comboWrapper">
+        <input id="coilInput" name="coilBatchNo" placeholder="Type to search coil..." autocomplete="off" required>
+        <div id="coilList" class="combo-list"></div>
+      </div>
     </div>
 
     <div><label class="req">M/C NO</label><input name="mcNo" required></div>
@@ -137,7 +146,7 @@ const firebaseConfig={
   appId:"1:919012116249:web:3699a77a34c8c8facd6788"
 };
 
-// ** REPLACE THIS URL WITH YOUR NEW DEPLOYED WEB APP URL **
+// ** REPLACE WITH YOUR NEW DEPLOYED URL **
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwJPfqKIsYl_uFwuGxXQsz-bHlFTKLM1jY_c7CYGA64zmmJqIQk4ZDVM8BYajfwzAJudQ/exec";
 
 const app=initializeApp(firebaseConfig);
@@ -148,6 +157,12 @@ const loginSection=document.getElementById("loginSection");
 const formSection=document.getElementById("formSection");
 const userInfoDisplay=document.getElementById("userInfoDisplay");
 
+// Dropdown Elements
+const coilInput = document.getElementById("coilInput");
+const coilList = document.getElementById("coilList");
+const comboWrapper = document.getElementById("comboWrapper");
+let coilData = []; // Store the loaded coils
+
 // --- Set Default Date to Today ---
 document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("entryDate");
@@ -155,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const dd = String(today.getDate()).padStart(2, '0');
-  // Input always needs YYYY-MM-DD to work, Backend will format it to "15 Jan 2026"
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 });
 
@@ -169,6 +183,57 @@ onAuthStateChanged(auth,user=>{
     userInfoDisplay.textContent="👤 "+user.displayName;
     document.getElementById("userEmail").value=user.email;
     document.getElementById("testedBy").value=user.displayName;
+    
+    // Load Coil List when logged in
+    loadCoilList();
+  }
+});
+
+// --- Function to Load Coil List from Google Sheet ---
+function loadCoilList(){
+  const cb = "cb_" + Date.now();
+  window[cb] = (data) => {
+    coilData = Array.isArray(data) ? data : [];
+    coilInput.placeholder = "Select or type coil...";
+    delete window[cb];
+  };
+  const s = document.createElement("script");
+  // Calling the action 'getCoilList'
+  s.src = SCRIPT_URL + "?action=getCoilList&callback=" + cb;
+  s.onerror = () => coilInput.placeholder = "Error loading list";
+  document.body.appendChild(s);
+}
+
+// --- Filter and Show Dropdown List ---
+function showList(val = "") {
+  coilList.innerHTML = "";
+  const f = coilData.filter(c => c.toLowerCase().includes(val.toLowerCase()));
+  
+  if (f.length === 0) {
+    coilList.style.display = "none";
+    return;
+  }
+
+  f.forEach(c => {
+    const d = document.createElement("div");
+    d.textContent = c;
+    d.onclick = () => {
+      coilInput.value = c;
+      coilList.style.display = "none";
+    };
+    coilList.appendChild(d);
+  });
+  coilList.style.display = "block";
+}
+
+// Event Listeners for Dropdown
+coilInput.addEventListener("input", () => showList(coilInput.value));
+coilInput.addEventListener("focus", () => showList(coilInput.value));
+
+// Close dropdown if clicked outside
+document.addEventListener("click", e => {
+  if (!comboWrapper.contains(e.target)) {
+    coilList.style.display = "none";
   }
 });
 
