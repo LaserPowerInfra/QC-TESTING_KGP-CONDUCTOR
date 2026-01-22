@@ -7,107 +7,33 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-/* Basic Reset */
+/* ... (আগের সব CSS স্টাইল একই থাকবে) ... */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,sans-serif;}
 #bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:-1}
-
 header{background:#0d6efd;color:#fff;padding:10px;text-align:center;font-size:20px;font-weight:600;position:sticky;top:0;z-index:1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
-
-/* Card Style */
-.card{
-    max-width: 1100px;
-    width: 96%;
-    margin: 15px auto; 
-    background:#fff; 
-    padding: 20px; 
-    border-radius:10px; 
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
-}
-
+.card{max-width: 1100px; width: 96%; margin: 15px auto; background:#fff; padding: 20px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.25);}
 #loginSection{text-align:center;padding:50px 20px}
 .btn-google{background:#fff;color:#444;border:1px solid #ddd;padding:12px 25px;border-radius:50px;font-weight:600;cursor:pointer}
-
 #formSection{display:none}
 .user-info{background:#e7f1ff;color:#0d6efd;padding:8px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:bold; font-size: 14px;}
-
-/* 2 Column Grid */
-.form-grid{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 20px;
-    row-gap: 10px; 
-}
-
-label{
-    font-size:11px;
-    font-weight:600; 
-    margin-bottom: 2px; 
-    display: block; 
-    color: #444;
-}
+.form-grid{display:grid; grid-template-columns: 1fr 1fr; column-gap: 20px; row-gap: 10px;}
+label{font-size:11px; font-weight:600; margin-bottom: 2px; display: block; color: #444;}
 .req::after{content:" *";color:red}
-
-/* COMPACT INPUTS & SELECTS */
-input, select {
-    width:100%;
-    padding: 6px 8px;
-    border:1px solid #ccc;
-    border-radius:4px;
-    font-size: 12px;
-    height: 32px;
-    color: #333;
-}
+input, select {width:100%; padding: 6px 8px; border:1px solid #ccc; border-radius:4px; font-size: 12px; height: 32px; color: #333;}
 input:focus, select:focus { border-color: #0d6efd; outline: none; }
 input[readonly]{background:#e9ecef; cursor: not-allowed; color: #555; font-weight: bold; border-color: #ccc;}
-
 select option { font-size: 12px; padding: 4px; }
-
-/* Custom Searchable Dropdown Style */
 .combo { position: relative; }
-.combo::after {
-    content: ''; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #666;
-    pointer-events: none;
-}
+.combo::after { content: ''; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #666; pointer-events: none; }
 .combo input { padding-right: 30px; cursor: pointer; }
-
-/* Compact List for Searchable Dropdown */
-.combo-list {
-    position:absolute; top:100%; left:0; right:0; background:#fff;
-    border:1px solid #ccc; max-height:180px; overflow-y:auto; display:none;
-    z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 4px 4px;
-}
-.combo-list div{
-    padding: 5px 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #f5f5f5;
-    font-size: 12px;
-    line-height: 1.3;
-}
+.combo-list { position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #ccc; max-height:180px; overflow-y:auto; display:none; z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 4px 4px; }
+.combo-list div{ padding: 5px 10px; cursor: pointer; border-bottom: 1px solid #f5f5f5; font-size: 12px; line-height: 1.3; }
 .combo-list div:hover{background:#e9ecef}
-
-/* Buttons */
-button.submit-btn{
-    grid-column:1/-1;
-    padding:10px;
-    background:#0d6efd;
-    color:#fff;
-    border:none;
-    border-radius:6px;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer; 
-    margin-top:15px;
-}
-button.submit-btn:hover { background: #0b5ed7; }
-
+button.submit-btn{grid-column:1/-1; padding:10px; background:#0d6efd; color:#fff; border:none; border-radius:6px; font-size:15px; font-weight:600; cursor:pointer; margin-top:15px;}
 .logout-container { text-align: center; margin-top: 10px; }
 .logout-btn{border:1px solid #dc3545;color:#dc3545;padding:5px 15px;border-radius:4px;background:none;cursor:pointer; font-size: 12px;}
-.logout-btn:hover { background: #dc3545; color: white; }
-
-/* Mobile Responsive */
 @media(max-width:700px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -138,7 +64,6 @@ button.submit-btn:hover { background: #0b5ed7; }
     <div><label class="req">Shift</label><select name="shift" required><option value="">Select</option><option>DAY</option><option>NIGHT</option></select></div>
     
     <div><label class="req">MACHINE NO</label><select name="machineNo" required><option value="">Select</option><option>RBD-14</option><option>RBD-17</option><option>RBD-18</option></select></div>
-    
     <div class="combo" id="comboWrapper">
         <label class="req">COIL NO / BATCH NO</label>
         <input id="coilInput" name="coilBatchNo" placeholder="Select or type coil..." autocomplete="off" required>
@@ -154,9 +79,13 @@ button.submit-btn:hover { background: #0b5ed7; }
     <div><label class="req">Process</label><select name="process" required><option value="">Select</option><option>AFTER AGEING</option><option>BEFORE AGEING</option></select></div>
     
     <div><label class="req">OD/DIA</label><input type="number" step="any" id="odDia" name="odDia" required></div>
-    
     <div><label class="req">CR@20 DEG C</label><input type="number" step="any" id="cr20" name="cr20" required></div>
+    
     <div><label class="req">BREAKING LOAD</label><input type="number" step="any" id="breakingLoad" name="breakingLoad" required></div>
+    
+    <div><label class="req">ELONGATION BREAK LOAD</label>
+      <input type="number" step="any" name="elongationBreakLoad" required>
+    </div>
     
     <div><label class="req">ELONGATION %</label><input type="number" step="any" name="elongation" required></div>
     
@@ -191,6 +120,7 @@ const firebaseConfig={
   appId:"1:919012116249:web:3699a77a34c8c8facd6788"
 };
 
+// ** REPLACE WITH YOUR DEPLOYED URL **
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwJPfqKIsYl_uFwuGxXQsz-bHlFTKLM1jY_c7CYGA64zmmJqIQk4ZDVM8BYajfwzAJudQ/exec";
 
 const app=initializeApp(firebaseConfig);
@@ -354,9 +284,8 @@ entryForm.addEventListener("submit",e=>{
   submitBtn.disabled=true;
   submitBtn.innerText = "Submitting...";
 
-  // VALIDATION: Check if Entered COIL NO exists in the loaded List
+  // Validation: Check if Coil exists in List
   const enteredCoil = coilInput.value.trim();
-  // Case-sensitive check usually safer for IDs, but if you want flexible use .toLowerCase()
   const isValidCoil = coilData.includes(enteredCoil);
 
   if (!isValidCoil) {
@@ -367,7 +296,7 @@ entryForm.addEventListener("submit",e=>{
       });
       submitBtn.disabled = false;
       submitBtn.innerText = "Submit Data";
-      return; // STOP EXECUTION
+      return;
   }
   
   const fd=new FormData(entryForm);
