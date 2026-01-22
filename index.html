@@ -7,99 +7,94 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-/* Reset & Basic Style */
+/* Basic Reset */
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,sans-serif; overflow: hidden;} /* Prevent Body Scroll */
+html,body{margin:0;padding:0;width:100%;height:100%;font-family:Segoe UI,Arial,sans-serif;}
 #bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:-1}
 
-/* Compact Header */
-header{background:#0d6efd;color:#fff;padding:8px;text-align:center;font-size:18px;font-weight:600;position:sticky;top:0;z-index:1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+header{background:#0d6efd;color:#fff;padding:12px;text-align:center;font-size:20px;font-weight:600;position:sticky;top:0;z-index:1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
 
-/* Compact Card container to fit screen */
+/* Card Style - Wider width as requested */
 .card{
-    width:98%; 
-    max-width:1200px; 
-    margin: 10px auto; 
+    max-width: 1100px; /* Width increased */
+    width: 96%;
+    margin: 20px auto; 
     background:#fff; 
-    padding:15px; 
-    border-radius:8px; 
-    box-shadow:0 5px 15px rgba(0,0,0,.25);
-    height: calc(100vh - 60px); /* Fit within remaining height */
-    overflow-y: auto; /* Internal scroll if screen is too small */
-    display: flex;
-    flex-direction: column;
+    padding: 25px; 
+    border-radius:10px; 
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
 #loginSection{text-align:center;padding:50px 20px}
-.btn-google{background:#fff;color:#444;border:1px solid #ddd;padding:10px 20px;border-radius:50px;font-weight:600;cursor:pointer}
+.btn-google{background:#fff;color:#444;border:1px solid #ddd;padding:12px 25px;border-radius:50px;font-weight:600;cursor:pointer}
 
-#formSection{display:none; flex: 1;}
-.user-info{background:#e7f1ff;color:#0d6efd;padding:5px;border-radius:4px;text-align:center;margin-bottom:10px;font-weight:bold; font-size: 13px;}
+#formSection{display:none}
+.user-info{background:#e7f1ff;color:#0d6efd;padding:8px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:bold; font-size: 14px;}
 
-/* 4 Column Grid for Compact View */
+/* 2 Column Grid (Previous Design) but with adjusted gaps */
 .form-grid{
     display:grid;
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 8px; /* Reduced gap */
-    align-items: end;
+    grid-template-columns: 1fr 1fr; /* 2 Columns */
+    column-gap: 25px; /* Space between columns */
+    row-gap: 12px;    /* Reduced row gap to fit more on screen */
 }
+.full-width{grid-column:1/-1}
 
-/* Label & Input Styling */
-label{font-size:11px;font-weight:600; margin-bottom: 2px; display: block; color: #444;}
+label{font-size:12px;font-weight:600; margin-bottom: 3px; display: block; color: #444;}
 .req::after{content:" *";color:red}
+
+/* Compact Inputs */
 input,select{
     width:100%;
-    padding:6px; /* Reduced padding */
+    padding: 8px 10px; /* Slightly smaller padding */
     border:1px solid #ccc;
     border-radius:4px;
-    font-size: 12px;
+    font-size: 14px;
 }
 input:focus, select:focus { border-color: #0d6efd; outline: none; }
 
 /* Readonly fields */
-input[readonly]{background:#f0f2f5; cursor: not-allowed; color: #333; font-weight: bold; border-color: #ccc;}
+input[readonly]{background:#e9ecef; cursor: not-allowed; color: #333; font-weight: bold; border-color: #bbb;}
 
 /* Dropdown Arrow Style */
 .combo { position: relative; }
 .combo::after {
-    content: ''; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #666;
+    content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+    border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #666;
     pointer-events: none;
 }
-.combo input { padding-right: 25px; cursor: pointer; }
+.combo input { padding-right: 35px; cursor: pointer; }
 
 .combo-list {
     position:absolute; top:100%; left:0; right:0; background:#fff;
-    border:1px solid #ccc; max-height:150px; overflow-y:auto; display:none;
-    z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border-radius: 0 0 4px 4px;
+    border:1px solid #ccc; max-height:200px; overflow-y:auto; display:none;
+    z-index:1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 6px 6px;
 }
-.combo-list div{padding:8px;cursor:pointer;border-bottom: 1px solid #eee; font-size: 12px;}
+.combo-list div{padding:10px;cursor:pointer;border-bottom: 1px solid #eee;}
 .combo-list div:hover{background:#e9ecef}
 
-/* Submit & Logout Buttons */
+/* Buttons */
 button.submit-btn{
     grid-column:1/-1;
-    padding:10px;
+    padding:12px;
     background:#0d6efd;
     color:#fff;
     border:none;
-    border-radius:4px;
-    font-size:14px;
+    border-radius:6px;
+    font-size:16px;
     font-weight:600;
     cursor:pointer; 
-    margin-top:10px;
+    margin-top:20px;
 }
 button.submit-btn:hover { background: #0b5ed7; }
 
-.logout-container { text-align: center; margin-top: 5px; }
-.logout-btn{border:1px solid #dc3545;color:#dc3545;padding:4px 10px;border-radius:3px;background:none;cursor:pointer; font-size: 11px;}
+.logout-container { text-align: center; margin-top: 15px; }
+.logout-btn{border:1px solid #dc3545;color:#dc3545;padding:6px 15px;border-radius:4px;background:none;cursor:pointer; font-size: 13px;}
 .logout-btn:hover { background: #dc3545; color: white; }
 
-/* Responsive Adjustments */
-@media(max-width:900px){ .form-grid{ grid-template-columns: repeat(3, 1fr); } }
-@media(max-width:600px){ .form-grid{ grid-template-columns: repeat(2, 1fr); } .card{height: auto; overflow: visible;} body{overflow: auto;} }
-@media(max-width:400px){ .form-grid{ grid-template-columns: 1fr; } }
+/* Mobile Responsive */
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -127,28 +122,39 @@ button.submit-btn:hover { background: #0b5ed7; }
 
     <div><label class="req">Date</label><input type="date" id="entryDate" name="entryDate" required></div>
     <div><label class="req">Shift</label><select name="shift" required><option value="">Select</option><option>DAY</option><option>NIGHT</option></select></div>
+    
     <div><label class="req">MACHINE NO</label><select name="machineNo" required><option value="">Select</option><option>RBD-14</option><option>RBD-17</option><option>RBD-18</option></select></div>
-    <div class="combo" id="comboWrapper"><label class="req">COIL NO / BATCH NO</label><input id="coilInput" name="coilBatchNo" placeholder="Search..." autocomplete="off" required><div id="coilList" class="combo-list"></div></div>
+    
+    <div class="combo" id="comboWrapper">
+        <label class="req">COIL NO / BATCH NO</label>
+        <input id="coilInput" name="coilBatchNo" placeholder="Select or type coil..." autocomplete="off" required>
+        <div id="coilList" class="combo-list"></div>
+    </div>
 
     <div><label class="req">M/C NO</label><input name="mcNo" required></div>
     <div><label class="req">Customer Name</label><input name="customerName" required></div>
+    
     <div><label class="req">Cable Type / Size</label><input name="cableType" required></div>
     <div><label class="req">BOBBIN / DRUM NO</label><input type="number" name="drumNo" required></div>
     
     <div><label class="req">Process</label><select name="process" required><option value="">Select</option><option>AFTER AGEING</option><option>BEFORE AGEING</option></select></div>
+    
     <div><label class="req">OD/DIA</label><input type="number" step="any" id="odDia" name="odDia" required></div>
+    
     <div><label class="req">CR@20 DEG C</label><input type="number" step="any" id="cr20" name="cr20" required></div>
     <div><label class="req">BREAKING LOAD</label><input type="number" step="any" id="breakingLoad" name="breakingLoad" required></div>
     
     <div><label class="req">ELONGATION %</label><input type="number" step="any" name="elongation" required></div>
+    
     <div><label class="req">UTS (Auto)</label><input type="number" step="any" id="uts" name="uts" readonly required></div>
     <div><label class="req">CONDUCTIVITY (Auto)</label><input type="number" step="any" id="conductivity" name="conductivity" readonly required></div>
     <div><label class="req">WEIGHT (Auto)</label><input type="number" step="any" id="weight" name="weight" readonly required></div>
+    <div><label class="req">RESITIVITY (Auto)</label><input type="number" step="any" id="resistivity" name="resistivity" readonly required></div>
 
-    <div><label class="req">RESISTIVITY (Auto)</label><input type="number" step="any" id="resistivity" name="resistivity" readonly required></div>
     <div><label>TORSION</label><input type="text" name="torsion"></div>
     <div><label class="req">Results</label><select name="results" required><option value="">Select</option><option>FAIL</option><option>PASS</option><option>OK</option></select></div>
-    <div><label class="req">REMARKS</label><select name="remarks" required><option value="">Select</option><option>BL FAIL</option><option>UTS FAIL</option><option>PASS</option><option>OK</option></select></div>
+    
+    <div class="full-width"><label class="req">REMARKS</label><select name="remarks" required><option value="">Select</option><option>BL FAIL</option><option>UTS FAIL</option><option>PASS</option><option>OK</option></select></div>
  
    <button class="submit-btn" id="submitBtn">Submit Data</button>
   </form>
@@ -211,12 +217,14 @@ function calculateAll() {
     const cr = parseFloat(crInput.value) || 0;
     const bl = parseFloat(blInput.value) || 0;
 
+    // Weight
     if (od > 0) {
         weightInput.value = ((3.14 / 4) * od * od * 2.703).toFixed(2);
     } else {
         weightInput.value = "";
     }
 
+    // Resistivity
     let resistivityVal = 0;
     if (od > 0 && cr > 0) {
         resistivityVal = (3.14 / 4) * od * od * cr;
@@ -225,12 +233,14 @@ function calculateAll() {
         resInput.value = "";
     }
 
+    // Conductivity
     if (resistivityVal > 0) {
         condInput.value = ((1 / resistivityVal) * 1724.1).toFixed(2);
     } else {
         condInput.value = "";
     }
 
+    // UTS
     if (od > 0 && bl > 0) {
         const area = (od * od * 3.142) / 4;
         utsInput.value = ((bl / area) / 9.8 * 1000).toFixed(2);
@@ -250,7 +260,7 @@ window.logout=()=>signOut(auth).then(()=>location.reload());
 onAuthStateChanged(auth,user=>{
   if(user){
     loginSection.style.display="none";
-    formSection.style.display="flex"; // Updated for flex layout
+    formSection.style.display="block";
     userInfoDisplay.textContent="👤 "+user.displayName;
     document.getElementById("userEmail").value=user.email;
     document.getElementById("testedBy").value=user.displayName;
