@@ -27,43 +27,19 @@ label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
 input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
 input[readonly]{background:#f1f3f6}
 
-/* Dropdown/Combo Box Styles Updated with Arrow */
-.combo {
-    position: relative;
-}
-
-/* Arrow Icon using CSS */
+/* Dropdown Arrow Style */
+.combo { position: relative; }
 .combo::after {
-    content: '';
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid #666; /* Arrow Color */
-    pointer-events: none; /* Allows click to pass through to the input */
+    content: ''; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+    border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #666;
+    pointer-events: none;
 }
-
-/* Add padding to input so text doesn't overlap the arrow */
-.combo input {
-    padding-right: 35px; 
-    cursor: pointer;
-}
+.combo input { padding-right: 35px; cursor: pointer; }
 
 .combo-list {
-    position:absolute;
-    top:100%;
-    left:0;
-    right:0;
-    background:#fff;
-    border:1px solid #ccc;
-    max-height:200px;
-    overflow-y:auto;
-    display:none;
-    z-index:100;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    border-radius: 0 0 6px 6px;
+    position:absolute; top:100%; left:0; right:0; background:#fff;
+    border:1px solid #ccc; max-height:200px; overflow-y:auto; display:none;
+    z-index:100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 6px 6px;
 }
 .combo-list div{padding:10px;cursor:pointer;border-bottom: 1px solid #eee;}
 .combo-list div:hover{background:#e9ecef}
@@ -127,7 +103,10 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
     <div><label class="req">M/C NO</label><input name="mcNo" required></div>
     <div><label class="req">Customer Name</label><input name="customerName" required></div>
     <div><label class="req">Cable Type / Size</label><input name="cableType" required></div>
-    <div><label class="req">BOBBIN NO / COIL NO / DRUM NO</label><input name="drumNo" required></div>
+    
+    <div><label class="req">BOBBIN NO / COIL NO / DRUM NO</label>
+        <input type="number" step="any" name="drumNo" required>
+    </div>
     
     <div><label class="req">Process</label>
       <select name="process" required>
@@ -140,6 +119,7 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
     <div><label class="req">CR@20 DEG C</label><input type="number" step="any" name="cr20" required></div>
     <div><label class="req">BREAKING LOAD</label><input type="number" step="any" name="breakingLoad" required></div>
     <div><label class="req">ELONGATION %</label><input type="number" step="any" name="elongation" required></div>
+    
     <div><label class="req">UTS</label><input type="number" step="any" name="uts" required></div>
     <div><label class="req">CONDUCTIVITY</label><input type="number" step="any" name="conductivity" required></div>
     <div><label class="req">WEIGHT</label><input type="number" step="any" name="weight" required></div>
@@ -196,9 +176,9 @@ const userInfoDisplay=document.getElementById("userInfoDisplay");
 const coilInput = document.getElementById("coilInput");
 const coilList = document.getElementById("coilList");
 const comboWrapper = document.getElementById("comboWrapper");
-let coilData = []; // Store the loaded coils
+let coilData = [];
 
-// --- Set Default Date to Today ---
+// Default Date to Today
 document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("entryDate");
   const today = new Date();
@@ -218,29 +198,23 @@ onAuthStateChanged(auth,user=>{
     userInfoDisplay.textContent="👤 "+user.displayName;
     document.getElementById("userEmail").value=user.email;
     document.getElementById("testedBy").value=user.displayName;
-    
-    // Load Coil List when logged in
     loadCoilList();
   }
 });
 
-// --- Function to Load Coil List from Google Sheet ---
 function loadCoilList(){
   const cb = "cb_" + Date.now();
   window[cb] = (data) => {
     coilData = Array.isArray(data) ? data : [];
-    // Reset placeholder to indicate ready
     coilInput.placeholder = "Select or type coil...";
     delete window[cb];
   };
   const s = document.createElement("script");
-  // Calling the action 'getCoilList'
   s.src = SCRIPT_URL + "?action=getCoilList&callback=" + cb;
   s.onerror = () => coilInput.placeholder = "Error loading list";
   document.body.appendChild(s);
 }
 
-// --- Filter and Show Dropdown List ---
 function showList(val = "") {
   coilList.innerHTML = "";
   const f = coilData.filter(c => c.toLowerCase().includes(val.toLowerCase()));
@@ -249,7 +223,6 @@ function showList(val = "") {
     coilList.style.display = "none";
     return;
   }
-
   f.forEach(c => {
     const d = document.createElement("div");
     d.textContent = c;
@@ -262,13 +235,10 @@ function showList(val = "") {
   coilList.style.display = "block";
 }
 
-// Event Listeners for Dropdown
 coilInput.addEventListener("input", () => showList(coilInput.value));
-// Show full list on click/focus if input is empty, otherwise filter
 coilInput.addEventListener("click", () => showList(coilInput.value)); 
 coilInput.addEventListener("focus", () => showList(coilInput.value));
 
-// Close dropdown if clicked outside
 document.addEventListener("click", e => {
   if (!comboWrapper.contains(e.target)) {
     coilList.style.display = "none";
@@ -296,7 +266,6 @@ entryForm.addEventListener("submit",e=>{
         Swal.fire("Submitted","Data saved successfully!","success");
         entryForm.reset();
         
-        // Reset Date to Today after submit
         const today = new Date();
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
