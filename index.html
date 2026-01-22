@@ -225,7 +225,7 @@ function calculateAll() {
     // Formula: 3.14/4 * OD * OD * 2.703
     if (od > 0) {
         const weight = (3.14 / 4) * od * od * 2.703;
-        weightInput.value = weight.toFixed(3);
+        weightInput.value = weight.toFixed(2); // 2 Decimals
     } else {
         weightInput.value = "";
     }
@@ -235,7 +235,7 @@ function calculateAll() {
     let resistivityVal = 0;
     if (od > 0 && cr > 0) {
         resistivityVal = (3.14 / 4) * od * od * cr;
-        resInput.value = resistivityVal.toFixed(4); // Usually needs more precision
+        resInput.value = resistivityVal.toFixed(4); // 4 Decimals
     } else {
         resInput.value = "";
     }
@@ -244,18 +244,17 @@ function calculateAll() {
     // Formula: 1 / RESISTIVITY * 1724.1
     if (resistivityVal > 0) {
         const cond = (1 / resistivityVal) * 1724.1;
-        condInput.value = cond.toFixed(2);
+        condInput.value = cond.toFixed(2); // 2 Decimals
     } else {
         condInput.value = "";
     }
 
     // 4. Calculate UTS
     // Formula: BREAKING LOAD / AREA / 9.8 * 1000
-    // Area for UTS = OD * OD * 3.142 / 4 (Using 3.142 as per your previous request)
     if (od > 0 && bl > 0) {
         const area = (od * od * 3.142) / 4;
         const uts = (bl / area) / 9.8 * 1000;
-        utsInput.value = uts.toFixed(2);
+        utsInput.value = uts.toFixed(2); // 2 Decimals
     } else {
         utsInput.value = "";
     }
