@@ -25,7 +25,9 @@ header{background:#0d6efd;color:#fff;padding:15px;text-align:center;font-size:22
 label{font-size:13px;font-weight:600; margin-bottom: 5px; display: block;}
 .req::after{content:" *";color:red}
 input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
-input[readonly]{background:#e9ecef; cursor: not-allowed; color: #555; font-weight: bold;}
+
+/* Readonly inputs style (Auto Calculated Fields) */
+input[readonly]{background:#e9ecef; cursor: not-allowed; color: #333; font-weight: bold; border-color: #999;}
 
 /* Dropdown Arrow Style */
 .combo { position: relative; }
@@ -117,7 +119,7 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
 
     <div><label class="req">OD/DIA</label><input type="number" step="any" id="odDia" name="odDia" required></div>
     
-    <div><label class="req">CR@20 DEG C</label><input type="number" step="any" name="cr20" required></div>
+    <div><label class="req">CR@20 DEG C</label><input type="number" step="any" id="cr20" name="cr20" required></div>
     
     <div><label class="req">BREAKING LOAD</label><input type="number" step="any" id="breakingLoad" name="breakingLoad" required></div>
     
@@ -127,9 +129,18 @@ button.submit-btn{grid-column:1/-1;padding:12px;background:#0d6efd;color:#fff;bo
       <input type="number" step="any" id="uts" name="uts" readonly required>
     </div>
     
-    <div><label class="req">CONDUCTIVITY</label><input type="number" step="any" name="conductivity" required></div>
-    <div><label class="req">WEIGHT</label><input type="number" step="any" name="weight" required></div>
-    <div><label class="req">RESITIVITY</label><input type="number" step="any" name="resistivity" required></div>
+    <div><label class="req">CONDUCTIVITY (Auto Calc)</label>
+      <input type="number" step="any" id="conductivity" name="conductivity" readonly required>
+    </div>
+
+    <div><label class="req">WEIGHT (Auto Calc)</label>
+      <input type="number" step="any" id="weight" name="weight" readonly required>
+    </div>
+
+    <div><label class="req">RESISTIVITY (Auto Calc)</label>
+      <input type="number" step="any" id="resistivity" name="resistivity" readonly required>
+    </div>
+
     <div><label class="req">TORSION</label><input type="number" step="any" name="torsion" required></div>
     
     <div><label class="req">Results</label>
@@ -194,31 +205,66 @@ document.addEventListener("DOMContentLoaded", () => {
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 });
 
-// --- Calculation Logic for UTS (Updated) ---
+// --- Calculation Logic (ALL FORMULAS) ---
 const odInput = document.getElementById("odDia");
+const crInput = document.getElementById("cr20");
 const blInput = document.getElementById("breakingLoad");
+
+// Outputs
 const utsInput = document.getElementById("uts");
+const weightInput = document.getElementById("weight");
+const resInput = document.getElementById("resistivity");
+const condInput = document.getElementById("conductivity");
 
-function calculateUTS() {
-    const od = parseFloat(odInput.value);
-    const bl = parseFloat(blInput.value);
+function calculateAll() {
+    const od = parseFloat(odInput.value) || 0;
+    const cr = parseFloat(crInput.value) || 0;
+    const bl = parseFloat(blInput.value) || 0;
 
+    // 1. Calculate WEIGHT
+    // Formula: 3.14/4 * OD * OD * 2.703
+    if (od > 0) {
+        const weight = (3.14 / 4) * od * od * 2.703;
+        weightInput.value = weight.toFixed(3);
+    } else {
+        weightInput.value = "";
+    }
+
+    // 2. Calculate RESISTIVITY
+    // Formula: 3.14/4 * OD * OD * CR
+    let resistivityVal = 0;
+    if (od > 0 && cr > 0) {
+        resistivityVal = (3.14 / 4) * od * od * cr;
+        resInput.value = resistivityVal.toFixed(4); // Usually needs more precision
+    } else {
+        resInput.value = "";
+    }
+
+    // 3. Calculate CONDUCTIVITY
+    // Formula: 1 / RESISTIVITY * 1724.1
+    if (resistivityVal > 0) {
+        const cond = (1 / resistivityVal) * 1724.1;
+        condInput.value = cond.toFixed(2);
+    } else {
+        condInput.value = "";
+    }
+
+    // 4. Calculate UTS
+    // Formula: BREAKING LOAD / AREA / 9.8 * 1000
+    // Area for UTS = OD * OD * 3.142 / 4 (Using 3.142 as per your previous request)
     if (od > 0 && bl > 0) {
-        // Formula: = BREAKING LOAD / (AREA) / 9.8 * 1000
         const area = (od * od * 3.142) / 4;
-        
-        // Corrected Calculation:
-        const result = (bl / area) / 9.8 * 1000;
-        
-        utsInput.value = result.toFixed(2); 
+        const uts = (bl / area) / 9.8 * 1000;
+        utsInput.value = uts.toFixed(2);
     } else {
         utsInput.value = "";
     }
 }
 
-// Trigger calculation when user types
-odInput.addEventListener("input", calculateUTS);
-blInput.addEventListener("input", calculateUTS);
+// Trigger calculation when any related input changes
+odInput.addEventListener("input", calculateAll);
+crInput.addEventListener("input", calculateAll);
+blInput.addEventListener("input", calculateAll);
 
 
 window.googleLogin=()=>signInWithPopup(auth,provider);
