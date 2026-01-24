@@ -346,16 +346,27 @@ onAuthStateChanged(auth,user=>{
 });
 
 function loadCoilList(){
-  const cb = "cb_" + Date.now();
-  window[cb] = (data) => {
-    coilData = Array.isArray(data) ? data : [];
-    coilInput.placeholder = "Select or type coil...";
-    delete window[cb];
-  };
-  const s = document.createElement("script");
-  s.src = SCRIPT_URL + "?action=getCoilList&callback=" + cb;
-  s.onerror = () => coilInput.placeholder = "Error loading list";
-  document.body.appendChild(s);
+  coilInput.placeholder = "Loading coil list...";
+
+  fetch(SCRIPT_URL + "?action=getCoilList")
+    .then(r => r.json())
+    .then(res => {
+      // Apps Script returns { result:"success", data:[...] }
+      if (res.result !== "success" || !Array.isArray(res.data)) {
+        throw new Error("Invalid response");
+      }
+      coilData = res.data;
+      coilInput.placeholder = "Select or type coil...";
+    })
+    .catch(err => {
+      console.error(err);
+      coilInput.placeholder = "Error loading list";
+      Swal.fire(
+        "Server Error",
+        "Unable to load COIL list. Check network.",
+        "error"
+      );
+    });
 }
 
 function showList(val = "") {
